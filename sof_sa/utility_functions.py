@@ -12,9 +12,7 @@ def connect2db(**db_credentials):
         an sqlalchemy engine object
     """
 
-    engine = create_engine(f"""mysql+pymysql://{db_credentials['DBUSER']}:{db_credentials['DBPASSWORD']}
-                            @{db_credentials['DBHOST']}:{db_credentials['DBPORT']}/{db_credentials['DBNAME']}"""
-                            )
+    engine = create_engine(f"mysql+pymysql://{db_credentials['DBUSER']}:{db_credentials['DBPASSWORD']}@{db_credentials['DBHOST']}:{db_credentials['DBPORT']}/{db_credentials['DBNAME']}")
     return engine
 
 def db_config(filepath : str, which_db : int) -> dict:

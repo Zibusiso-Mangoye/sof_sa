@@ -1,3 +1,4 @@
+from sqlalchemy import false
 from logger import logger
 import pandas as pd
 from utility_functions import connect2db, db_config, scrape_data
@@ -34,13 +35,16 @@ with engine.connect() as connection:
 
 # Now working with csv files from stackoverflow survey
 # loading in data 
-sofraw_df20 = pd.read_csv("..\\data\\survey_results_public_2020.csv")
-sofraw_df21 = pd.read_csv("..\\data\\survey_results_public_2021.csv")
-jetraw_df21 = pd.read_csv("..\\data\\2021_sharing_data_outside.csv")
+sofraw_df20 = pd.read_csv("..\\data\\survey_results_public_2020.csv", low_memory=False)
+sofraw_df21 = pd.read_csv("..\\data\\survey_results_public_2021.csv", low_memory=False)
+jetraw_df20 = pd.read_csv("..\\data\\2020_sharing_data_outside.csv", low_memory=False)
+jetraw_df21 = pd.read_csv("..\\data\\2021_sharing_data_outside.csv", low_memory=False)
 
 with engine.connect() as connection:
     sofraw_df20.to_sql('sofraw_20', con=connection, if_exists='replace')
     sofraw_df21.to_sql('sofraw_21', con=connection, if_exists='replace')
+    jetraw_df20.to_sql('jetraw_20', con=connection, if_exists='replace')
     jetraw_df21.to_sql('jetraw_21', con=connection, if_exists='replace')
 
 log.info(">> EXTRACTION PROCESS COMPLETED SUCCESSFULLY")
+# All data needed is in staging and ready to be explored
