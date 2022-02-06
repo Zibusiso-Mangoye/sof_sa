@@ -25,7 +25,6 @@ def db_config(filepath : str, which_db : int) -> dict:
     Returns : 
         A nested dictionary containing name of db and credentials
     """
-    # Checking validity of argument stagingortarget
     valid = {0, 1}
     if which_db not in valid:
         raise ValueError("results: status must be one of %r." % valid)
@@ -41,8 +40,6 @@ def db_config(filepath : str, which_db : int) -> dict:
         except yaml.YAMLError as exc:
             print(exc) # log this
     return parameters
-
-url = 'https://www.globalbrainforce.com/blog/software-developer-salary-around-the-world/'
 
 def scrape_data(url):
     """
