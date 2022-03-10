@@ -40,20 +40,3 @@ def db_config(filepath : str, which_db : int) -> dict:
         except yaml.YAMLError as exc:
             print(exc) # log this
     return parameters
-
-def scrape_data(url):
-    """
-    A function to scrape data from the web.
-    Params :
-        url - url for the web page to be scraped.
-    Returns:
-        Tables in the web page in a list of pandas dataframe objects
-    """
-    header = {
-    "User-Agent" : "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/50.0.2661.75 Safari/53>",
-    "X-Requested-With" : "XMLHttpRequest"
-    }
-
-    r = requests.get(url, headers=header)
-    web_data = pd.read_html(r.text)
-    return web_data
