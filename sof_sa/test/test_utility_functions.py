@@ -1,11 +1,7 @@
+from ..utility_functions import open_db, get_credentials
 
-from utility_functions import connect2db, scrape_data, db_config
-
-def test_connect2db(**db_credentials):
-    pass
-
-def test_db_config(filepath : str, which_db : int) -> dict:
-    pass
-
-def test_scrape_data(url):
-   pass
+def test_get_credentials() -> None:
+    path = "sof_sa\conf\staging_db_credentials.json"
+    print(get_credentials(path))
+    
+test_get_credentials()
