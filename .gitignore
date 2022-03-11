@@ -28,6 +28,7 @@ share/python-wheels/
 MANIFEST
 data/
 sof_sa_env/
+sof_sa/conf/
 
 # PyInstaller
 #  Usually these files are written by a python script from a template
