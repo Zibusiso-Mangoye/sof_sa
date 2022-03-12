@@ -1,6 +1,6 @@
 import json
 import logging
-import requests
+import numpy as np
 import pandas as pd
 from contextlib import contextmanager
 from sqlalchemy import create_engine, engine
@@ -15,13 +15,14 @@ def open_db(credentials : dict) -> engine.Connection:
     Returns:
         engine: a sqlalchemy engine object
     """
-    
+    print(credentials)
     try:
-        engine = create_engine(f'mysql://{credentials["user"]}:{credentials["password"]}@{credentials["host"]}/{credentials["database"]}')
-        return engine.connect()
+        DATABASE_URL = f'mysql+mysqlconnector://{credentials["user"]}:{credentials["password"]}@{credentials["host"]}/{credentials["database"]}'
+        engine = create_engine(DATABASE_URL)
+        connection = engine.connect()
+        yield connection
     except Exception as error:
-        logging.error(error)    
-        
+        logging.error(error)     
 
 def get_credentials(filepath : str) -> dict:
     """Loads database credentials from file.
@@ -31,34 +32,11 @@ def get_credentials(filepath : str) -> dict:
     Returns :
         A dictionary containing database credentials
     """
-    
     with open(filepath, "r") as file:
         data = json.loads(file.read())
    
     return data
 
-def scrape_data(url):
-    """A function to scrape data from the web.
-    Args:
-        url - url for the web page to be scraped.
-    Returns:
-        Tables in the web page in a list of pandas dataframe objects
-    """
-    header = {
-    "User-Agent" : "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/50.0.2661.75 Safari/53>",
-    "X-Requested-With" : "XMLHttpRequest"
-    }
-    try:
-        
-        r = requests.get(url, headers=header)
-        web_data = pd.read_html(r.text)
-        return web_data
-    
-    except Exception as err:
-        logging.exception(err) 
-        raise Exception(f'>> FAILED TO SCRAPE DATA FROM URL : {url}')
-    
-    
 def load_data(data_to_load : pd.DataFrame, name_of_table : str, credentials : dict) -> None:
     """Loads data to a database. The database in use is specified in the credentials argument.
     
@@ -70,8 +48,98 @@ def load_data(data_to_load : pd.DataFrame, name_of_table : str, credentials : di
     Returns:
         None 
     """
-    
     with open_db(credentials) as connection:
         data_to_load.to_sql(name_of_table, con=connection, if_exists='replace')
         
     logging.info(f"LOADED TABLE WITH NAME: {name_of_table}")
+    
+    
+def add_year(df: pd.DataFrame, year : int) -> pd.DataFrame:
+    """Adds a column "year" to the given dataframe with the value year.
+    
+    Args:
+        - df(pd.DataFrame): The dataframe to be modified.
+        - year(int): Year value to be added.
+    
+    Returns:
+        - a dataframe with the added column
+    """
+    sLength = len(df.index)
+    df['Year'] = pd.Series(np.full(sLength, year))
+    return df
+
+def replace_with_mean(df: pd.DataFrame) -> pd.DataFrame:
+    """Replaces missing values in the column Age with the mean of the column
+    
+    Args: 
+        - df(pd.DataFrame): The dataframe to be modified.
+        
+    Returns:
+        - a dataframe with the modified column
+    """
+    mean_age = round(df['Age'].mean())
+    df['Age'].replace(np.nan, mean_age, inplace=True)
+    return df
+
+def clean_gender_column(df: pd.DataFrame) -> list:
+    """Removes ; and chooses the first option in a column that contains rows that have multiple values
+    
+    Args: 
+        - df(pd.DataFrame): The dataframe to be modified.
+        
+    Returns:
+        - a list of new gender values.
+    """
+    new_list = []
+    df['Gender'] = df.Gender.astype(str)
+    for gender in df['Gender']:
+        if gender == None:
+            new_items = 'None'
+            new_list.append(new_items)
+        elif ';' in gender:
+            new_items = gender.split(";")[0]
+            new_list.append(new_items)
+        else:
+            new_list.append(gender)
+    return new_list
+
+def clean_ethnicity_column(df: pd.DataFrame) -> list:
+    """Removes ; and chooses the first option in a column that contains rows that have multiple values
+    
+    Args: 
+        - df(pd.DataFrame): The dataframe to be modified.
+        
+    Returns:
+        - a list of new ethinicity values.
+    """
+    new_list = []
+    df['Ethnicity'] = df.Ethnicity.astype(str)
+
+    for ethnicity in df['Ethnicity']:
+        if type(ethnicity) == float:
+            new_items = 'none'
+            new_list.append(new_items)
+        elif ';' in ethnicity:
+            new_items = ethnicity.split(";")[0]
+            new_list.append(new_items)
+        else:
+            new_list.append(ethnicity)
+    return new_list
+
+def remove_outlier(df_in: pd.DataFrame, col_name: str) -> pd.DataFrame:
+    """Removes outliers in df_in where column=col_name
+    
+    Args: 
+        - df_in(pd.DataFrame): The dataframe to be modified.
+        - col_name(str): Name of the column to be modified within the dataframe.
+    
+    Returns:
+        - a dataframe with the modified column 
+    """
+    q1 = df_in[col_name].quantile(0.25)
+    q3 = df_in[col_name].quantile(0.75)
+    iqr = q3-q1 #Interquartile range
+    fence_low  = q1-1.5*iqr
+    fence_high = q3+1.5*iqr
+    df_out = df_in.loc[(df_in[col_name] > fence_low) & (df_in[col_name] < fence_high)]
+    return df_out
