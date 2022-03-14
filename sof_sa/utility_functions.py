@@ -15,12 +15,10 @@ def open_db(credentials : dict) -> engine.Connection:
     Returns:
         engine: a sqlalchemy engine object
     """
-    print(credentials)
     try:
         DATABASE_URL = f'mysql+mysqlconnector://{credentials["user"]}:{credentials["password"]}@{credentials["host"]}/{credentials["database"]}'
-        engine = create_engine(DATABASE_URL)
-        connection = engine.connect()
-        yield connection
+        engine = create_engine(DATABASE_URL, pool_pre_ping=True)
+        return engine
     except Exception as error:
         logging.error(error)     
 
