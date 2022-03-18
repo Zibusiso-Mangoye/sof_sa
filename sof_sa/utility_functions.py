@@ -2,25 +2,7 @@ import json
 import logging
 import numpy as np
 import pandas as pd
-from contextlib import contextmanager
-from sqlalchemy import create_engine, engine
-
-@contextmanager
-def open_db(credentials : dict) -> engine.Connection:
-    """Connects to the databse specified in the credentials
-
-    Args:
-        credentials (dict): Database credentials in the form user, password, host, database name
-
-    Returns:
-        engine: a sqlalchemy engine object
-    """
-    try:
-        DATABASE_URL = f'mysql+mysqlconnector://{credentials["user"]}:{credentials["password"]}@{credentials["host"]}/{credentials["database"]}'
-        engine = create_engine(DATABASE_URL, pool_pre_ping=True)
-        return engine
-    except Exception as error:
-        logging.error(error)     
+from sqlalchemy import create_engine 
 
 def get_credentials(filepath : str) -> dict:
     """Loads database credentials from file.
@@ -46,9 +28,15 @@ def load_data(data_to_load : pd.DataFrame, name_of_table : str, credentials : di
     Returns:
         None 
     """
-    with open_db(credentials) as connection:
-        data_to_load.to_sql(name_of_table, con=connection, if_exists='replace')
-        
+    
+    try:
+        DATABASE_URL = f'postgresql+psycopg2://{credentials["user"]}:{credentials["password"]}@{credentials["host"]}:{credentials["port"]}/{credentials["database"]}'
+        engine = create_engine(DATABASE_URL, pool_pre_ping=True)
+        with engine.connect() as connection:
+            data_to_load.to_sql(name_of_table, con=connection, if_exists='replace')
+    except Exception as error:
+        logging.error(error)
+  
     logging.info(f"LOADED TABLE WITH NAME: {name_of_table}")
     
     
