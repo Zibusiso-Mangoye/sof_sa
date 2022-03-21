@@ -34,25 +34,10 @@ def load_data(data_to_load : pd.DataFrame, name_of_table : str, credentials : di
         engine = create_engine(DATABASE_URL, pool_pre_ping=True)
         with engine.connect() as connection:
             data_to_load.to_sql(name_of_table, con=connection, if_exists='replace')
+            logging.info(f"LOADED TABLE WITH NAME: {name_of_table}")
     except Exception as error:
         logging.error(error)
-  
-    logging.info(f"LOADED TABLE WITH NAME: {name_of_table}")
     
-    
-def add_year(df: pd.DataFrame, year : int) -> pd.DataFrame:
-    """Adds a column "year" to the given dataframe with the value year.
-    
-    Args:
-        - df(pd.DataFrame): The dataframe to be modified.
-        - year(int): Year value to be added.
-    
-    Returns:
-        - a dataframe with the added column
-    """
-    sLength = len(df.index)
-    df['Year'] = pd.Series(np.full(sLength, year))
-    return df
 
 def replace_with_mean(df: pd.DataFrame) -> pd.DataFrame:
     """Replaces missing values in the column Age with the mean of the column
