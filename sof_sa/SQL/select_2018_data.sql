@@ -10,7 +10,6 @@ SET year = 2018;
 SELECT  
 	"Respondent" AS "respondent",
 	"Age" AS "age",
-	"RaceEthnicity" AS "ethnicity",
     "Gender" AS "gender",
     "DatabaseDesireNextYear" AS "database_desire_next_year",
     "DatabaseWorkedWith" AS "database_worked_with",

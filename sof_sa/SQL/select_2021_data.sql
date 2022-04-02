@@ -10,7 +10,6 @@ SET year = 2021;
 SELECT
 	"ResponseId" AS "respondent",
 	"Age" AS "age",
-	"Ethnicity" AS "ethnicity",
     "Gender" AS "gender",
     "DatabaseWantToWorkWith" AS "database_desire_next_year",
     "DatabaseHaveWorkedWith" AS "database_worked_with",
