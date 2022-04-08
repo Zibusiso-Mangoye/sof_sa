@@ -11,6 +11,7 @@ SELECT
 	"Respondent" AS "respondent",
 	"Age" AS "age",
     "Gender" AS "gender",
+    "Trans" AS "transgender",
 	"DatabaseDesireNextYear" AS "database_desire_next_year",
     "DatabaseWorkedWith" AS "database_worked_with",
     "LanguageDesireNextYear" AS "language_desire_next_year",
