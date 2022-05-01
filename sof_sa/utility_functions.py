@@ -1,116 +1,201 @@
-import json
-import logging
 import numpy as np
 import pandas as pd
-from sqlalchemy import create_engine 
+from collections import Counter
 
-def get_credentials(filepath : str) -> dict:
-    """Loads database credentials from file.
-    Args: 
-        filepath - path to the json file
+def count_unique_items_in_column(df: pd.DataFrame, column_name: str) -> pd.DataFrame:
+    """Counts unique elements in dataframe column. Column must have semicolon separated values or nan values in column
 
-    Returns :
-        A dictionary containing database credentials
-    """
-    with open(filepath, "r") as file:
-        data = json.loads(file.read())
-   
-    return data
+    Args:
+        df (pd.DataFrame): dataframe to be modified
+        column_name (str): column name in dataframe
 
-def load_data(data_to_load : pd.DataFrame, name_of_table : str, credentials : dict) -> None:
-    """Loads data to a database. The database in use is specified in the credentials argument.
-    
-    Args: 
-        - data_to_load(pd.DataFrame): The data to be loaded into the database.
-        - name_of_table(str): The name of the table to be used when load the data to the database.
-        - credentials(dict): A dictionary containing the credentials in the order user, password, host, database name
-        
     Returns:
-        None 
+        pd.DataFrame: new dataframe contain value and count of value in df
+    
+    Raises:
+        ValueError: if the column passed does not exist in dataframe
     """
+    if not column_name in df.columns:
+        raise ValueError(f"No column named {column_name} in dataframe.")
     
-    try:
-        DATABASE_URL = f'postgresql+psycopg2://{credentials["user"]}:{credentials["password"]}@{credentials["host"]}:{credentials["port"]}/{credentials["database"]}'
-        engine = create_engine(DATABASE_URL, pool_pre_ping=True)
-        with engine.connect() as connection:
-            data_to_load.to_sql(name_of_table, con=connection, if_exists='replace')
-            logging.info(f"LOADED TABLE WITH NAME: {name_of_table}")
-    except Exception as error:
-        logging.error(error)
+    column_as_list = df[column_name].tolist()
     
-
-def replace_with_mean(df: pd.DataFrame) -> pd.DataFrame:
-    """Replaces missing values in the column Age with the mean of the column
-    
-    Args: 
-        - df(pd.DataFrame): The dataframe to be modified.
-        
-    Returns:
-        - a dataframe with the modified column
-    """
-    mean_age = round(df['Age'].mean())
-    df['Age'].replace(np.nan, mean_age, inplace=True)
-    return df
-
-def clean_gender_column(df: pd.DataFrame) -> list:
-    """Removes ; and chooses the first option in a column that contains rows that have multiple values
-    
-    Args: 
-        - df(pd.DataFrame): The dataframe to be modified.
-        
-    Returns:
-        - a list of new gender values.
-    """
     new_list = []
-    df['Gender'] = df.Gender.astype(str)
-    for gender in df['Gender']:
-        if gender == None:
-            new_items = 'None'
-            new_list.append(new_items)
-        elif ';' in gender:
-            new_items = gender.split(";")[0]
-            new_list.append(new_items)
-        else:
-            new_list.append(gender)
-    return new_list
-
-def clean_ethnicity_column(df: pd.DataFrame) -> list:
-    """Removes ; and chooses the first option in a column that contains rows that have multiple values
-    
-    Args: 
-        - df(pd.DataFrame): The dataframe to be modified.
+    for list_item in column_as_list: 
         
-    Returns:
-        - a list of new ethinicity values.
-    """
-    new_list = []
-    df['Ethnicity'] = df.Ethnicity.astype(str)
+        # for nan values
+        if isinstance(list_item, type(None)):
+            new_list.append(list_item)
+            
+        if isinstance(list_item, str): 
+            new_list.extend(list_item.split(";"))
+            
+    # find the number of occurances of a item in a list
+    occ = Counter(new_list)
+    language = []
+    count = []
+    for x in occ:
+        key = x
+        value = occ[key]
+        language.append(key)
+        count.append(value)
 
-    for ethnicity in df['Ethnicity']:
-        if type(ethnicity) == float:
-            new_items = 'none'
-            new_list.append(new_items)
-        elif ';' in ethnicity:
-            new_items = ethnicity.split(";")[0]
-            new_list.append(new_items)
-        else:
-            new_list.append(ethnicity)
-    return new_list
+    df_temp = pd.DataFrame(list(zip(language, count)), columns = [column_name, 'count'])
+    df_temp.set_index(column_name, inplace=True)
+    df_temp.sort_values(by='count', ascending=False, inplace=True)
+    return df_temp
 
-def remove_outlier(df_in: pd.DataFrame, col_name: str) -> pd.DataFrame:
-    """Removes outliers in df_in where column=col_name
-    
-    Args: 
-        - df_in(pd.DataFrame): The dataframe to be modified.
-        - col_name(str): Name of the column to be modified within the dataframe.
-    
+def merge_dfs(dataframe_list: list, column_name: str) -> pd.DataFrame:
+    """Merges dataframes on column_name
+
+    Args:
+        dataframe_list (list): a list of dataframes to merge
+        column_name (str): column name to merge dataframes on 
+
     Returns:
-        - a dataframe with the modified column 
+        pd.DataFrame: merged dataframe
+        
+    Raises:
+        ValueError: if the list of dataframes passed is not equal to four
     """
-    q1 = df_in[col_name].quantile(0.25)
-    q3 = df_in[col_name].quantile(0.75)
-    iqr = q3-q1 #Interquartile range
-    fence_low  = q1-1.5*iqr
-    fence_high = q3+1.5*iqr
-    df_out = df_in.loc[(df_in[col_name] > fence_low) & (df_in[col_name] < fence_high)]
-    return df_out
+    if len(dataframe_list) != 4:
+        raise ValueError("List of dataframes must be equal to four(4)")
+     
+    dfs = []
+    for df in dataframe_list:
+        df1 = count_unique_items_in_column(df, column_name)
+        dfs.append(df1)
+        
+    df18_19 = pd.merge(dfs[0], dfs[1], on=column_name)
+    df20_21 = pd.merge(dfs[2], dfs[3], on=column_name)
+    dfs_merged = pd.merge(df18_19, df20_21, on=column_name)
+    dfs_merged.columns = ['2018', '2019', '2020', '2021']
+    
+    return dfs_merged
+
+def age_to_range(number: int) -> str:
+    """Checks if a certain value falls within a certain range then retruns the appropriate string
+
+    Args:
+        number (int): number to be checked
+
+    Returns:
+        str: a string based on the number passed
+    """
+
+    if number < 18:
+        return 'Under 18 years old'
+    elif number >= 18 and number <= 24:
+        return '18 - 24 years old'
+    elif number >= 25 and number <= 30:
+        return '25 - 30 years old'
+    elif number >= 31 and number <= 36:
+        return '31 - 36 years old'
+    elif number >= 37 and number <= 42:
+        return '37 - 42 years old'
+    elif number >= 43 and number <= 48:
+        return '43 - 48 years old'
+    elif number >= 49 and number <= 54:
+        return '49 - 54 years old'
+    elif number >= 55 and number <= 60:
+        return '55 - 60 years old'
+    elif number > 60:
+        return 'Over 60 years old'
+    
+def clean_age_column(age) -> str:
+    """Cleans the age column of a dataframe
+
+    Args:
+        age (Any): An int, str or float representing age
+
+    Returns:
+        str: a string based on the age passed
+    """
+    if isinstance(age, str):
+        n = age.replace(" ", "")
+        if 'or' in n:
+            return age_to_range(int(n[0:2]))
+                
+        if 'Under' in n:
+            return age_to_range(int(n[5:7]))
+            
+        if '-' in n:
+            return age_to_range((int(n[0:2]) + int(n[3:5]))//2)
+                
+        if 'Prefer' in n:
+            return 'Prefer not to say'
+        
+        if n is None:
+            return 'Prefer not to say'
+            
+    if isinstance(age, float) or isinstance(age, int):
+        return age_to_range(round(age))
+
+def replace_na_with_mean(df: pd.DataFrame, column_name: str) -> None:
+    
+    """Replaces na values in column of a dataframe with mean
+
+    Args:
+        df (pd.DataFrame): dataframe to be modified
+        column_name (str): column in dataframe
+    
+    Raises:
+        ValueError: if the column passed does not exist in dataframe
+    """
+    
+    if not column_name in df.columns:
+        raise ValueError(f"No column named {column_name} in dataframe.")
+    
+    age_list = df[column_name].to_list()
+    new_age = []
+
+    for age in age_list:
+        if isinstance(age, str):
+            n = age.replace(" ", "")
+            if 'or' in n:
+                new_age.append(int(n[0:2]))
+                
+            if 'Under' in n:
+                new_age.append(int(n[5:7]))
+            
+            if '-' in n:
+                new_age.append((int(n[0:2]) + int(n[3:5]))//2)
+                
+            if 'Prefer' in n or 'None' in n:
+                new_age.append(np.nan)
+        
+        if isinstance(age, float):
+            if np.isnan(age):
+                new_age.append(age)
+            else:
+                new_age.append(round(age))
+                
+    sum_of_numbers = 0
+    length_of_number = 0
+    for x in new_age:
+        if isinstance(x, int):
+            sum_of_numbers += x
+            length_of_number += 1 
+    mean = round(sum_of_numbers/length_of_number)
+
+    df[column_name].fillna(mean, inplace=True)
+    
+def add_trans_option(df: pd.DataFrame) -> list:
+    e = []
+    for gender, choice in zip(df['gender'].to_list(), df['transgender'].to_list()):
+        
+        if isinstance(choice, str) and isinstance(gender, str): 
+            if 'Yes' in choice:
+                e.append(gender +  ';Transgender')
+                
+            if 'No' in choice:
+                e.append(gender)
+            
+            if 'Prefer not to say' in choice or 'Or, in your own words:' in choice:
+                e.append(None)
+                
+        if isinstance(choice, type(None)) or isinstance(gender, type(None)):
+            e.append(gender)
+        
+    return e
+    
