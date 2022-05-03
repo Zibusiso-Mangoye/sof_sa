@@ -17,7 +17,7 @@ class Database:
     
         return data
 
-    def load_data(filepath: str, name_of_table: str, credentials: dict) -> None:
+    def load_data_into_db(filepath: str, name_of_table: str, credentials: dict) -> None:
         """Loads data to a database. The database in use is specified in the credentials argument.
         
         Args: 
