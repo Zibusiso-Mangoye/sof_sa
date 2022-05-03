@@ -1,3 +1,4 @@
+from typing import Any
 import pandas as pd
 from utility_functions import get_credentials, load_data
 
@@ -12,3 +13,9 @@ load_data(sofraw_df18, "raw_stackoverflow2018", credentials)
 load_data(sofraw_df19, "raw_stackoverflow2019", credentials)
 load_data(sofraw_df20, "raw_stackoverflow2020", credentials)
 load_data(sofraw_df21, "raw_stackoverflow2021", credentials)
+
+def extract_data(file_path: str, tablename: str, credentials: Any) -> None:
+    
+    df = pd.read_csv(file_path, low_memory=False)
+    
+    load_data(df, tablename, credentials)
