@@ -1,12 +1,11 @@
 import json
 import logging
 from pathlib import Path
-from typing import Optional
 import pandas as pd
 from sqlalchemy import create_engine 
 
 class Database:
-    def get_credentials(filepath : str) -> dict:
+    def get_credentials(self, filepath: str) -> dict:
         """Loads database credentials from file.
         Args: 
             filepath - path to the json file
@@ -19,7 +18,7 @@ class Database:
     
         return data
 
-    def load_data_into_db(name_of_table: str, credentials: dict, df: pd.DataFrame = None, filepath: str = '') -> None:
+    def load_data_into_db(self, name_of_table: str, credentials: dict, df: pd.DataFrame = None, filepath: str = '') -> None:
         """Loads data into database specified in the credentials
 
         Args:
@@ -52,7 +51,7 @@ class Database:
         except Exception as e:
             logging.error(e)
 
-    def get_data_from_db(path_to_sql_file: str, credentials: dict) -> pd.DataFrame:
+    def get_data_from_db(self, path_to_sql_file: str, credentials: dict) -> pd.DataFrame:
         """Executes an sql query 
 
         Args:
