@@ -1,5 +1,7 @@
 import json
 import logging
+from pathlib import Path
+from typing import Optional
 import pandas as pd
 from sqlalchemy import create_engine 
 
@@ -17,21 +19,31 @@ class Database:
     
         return data
 
-    def load_data_into_db(filepath: str, name_of_table: str, credentials: dict) -> None:
-        """Loads data to a database. The database in use is specified in the credentials argument.
-        
-        Args: 
-            - data_to_load(pd.DataFrame): The data to be loaded into the database.
-            - name_of_table(str): The name of the table to be used when load the data to the database.
-            - credentials(dict): A dictionary containing the credentials in the order user, password, host, database name
-            
-        Returns:
-            None 
+    def load_data_into_db(name_of_table: str, credentials: dict, df: pd.DataFrame = None, filepath: str = '') -> None:
+        """Loads data into database specified in the credentials
+
+        Args:
+            name_of_table (str): name of table
+            credentials (dict): credentials to be used
+            df (pd.DataFrame, optional): dataframe to load into database. Defaults to None.
+            filepath (str, optional): path to csv file to load into database. Defaults to ''.
+
+        Raises:
+            ValueError: if not dataframe is provided and file path is ''
+            ValueError: if both dataframe and filepath are provided
         """
         
-        try:
+        if df is None and filepath == '':
+            raise ValueError("Provide either a dataframe or a filepath to a csv file")
+        elif not df is None and Path(filepath).suffix == '.csv':
+            raise ValueError("A dataframe and a filepath to a csv file was provided please provide one or the other not both")
+        
+        if not df is None:
+            data_to_load = df
+        else:
             data_to_load = pd.read_csv(filepath, low_memory=False)
             
+        try:    
             DATABASE_URL = f'postgresql+psycopg2://{credentials["user"]}:{credentials["password"]}@{credentials["host"]}:{credentials["port"]}/{credentials["database"]}'
             engine = create_engine(DATABASE_URL, pool_pre_ping=True)
             with engine.connect() as connection:

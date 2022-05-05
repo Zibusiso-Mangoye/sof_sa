@@ -44,12 +44,11 @@ def count_unique_items_in_column(df: pd.DataFrame, column_name: str) -> pd.DataF
     df_temp.sort_values(by='count', ascending=False, inplace=True)
     return df_temp
 
-def create_df(dataframe_list: list, column_name: str, rename: bool = False) -> pd.DataFrame:
-    """Merges dataframes on column_name
+def _merge(dataframe_list: list) -> pd.DataFrame:
+    """Merges dataframes on index
 
     Args:
         dataframe_list (list): a list of dataframes to merge
-        column_name (str): column name to merge dataframes on 
 
     Returns:
         pd.DataFrame: merged dataframe
@@ -59,19 +58,59 @@ def create_df(dataframe_list: list, column_name: str, rename: bool = False) -> p
     """
     if len(dataframe_list) != 4:
         raise ValueError("List of dataframes must be equal to four(4)")
-     
-    dfs = []
-    for df in dataframe_list:
-        if rename:
-            df1 = count_unique_items_in_column(df, column_name).rename(index={'Google Cloud Platform/App Engine': 'Google Cloud Platform', 'Azure': 'Microsoft Azure'})
-        else:
-            df1 = count_unique_items_in_column(df, column_name)
-        dfs.append(df1)
         
-    df18_19 = pd.merge(dfs[0], dfs[1], on=column_name)
-    df20_21 = pd.merge(dfs[2], dfs[3], on=column_name)
-    dfs_merged = pd.merge(df18_19, df20_21, on=column_name)
+    df18_19 = pd.merge(dataframe_list[0], dataframe_list[1], left_index=True, right_index=True)
+    df20_21 = pd.merge(dataframe_list[2], dataframe_list[3], left_index=True, right_index=True)
+    dfs_merged = pd.merge(df18_19, df20_21, left_index=True, right_index=True)
     dfs_merged.columns = ['2018', '2019', '2020', '2021']
     
     return dfs_merged
 
+def merge_dfs(df_list: list, column_name: str, rename: bool = False, rename_data: dict = {}, fill_missing: bool = False, missing_values: dict = {}):
+    """Merge dataframes into one dataframe. 
+
+    Args:
+        df_list (list): list of dataframes to merge
+        column_name (str): column name to merge dataframes on
+        rename (bool, optional): option to rename any values or not. Defaults to False.
+        rename_data (dict, optional): data for renaming. Defaults to {}.
+        fill_missing (bool, optional): fill in missing data or not. Defaults to False.
+        missing_values (dict, optional): missing data values. Defaults to {}.
+
+    Raises:
+        ValueError: if rename is set to true but no data provided
+        ValueError: if fill_missing is set to true but no data provided
+
+    Returns:
+        pd.DataFrame : merged dataframe
+    """
+    if rename:
+        if len(rename_data) == 0:
+            raise ValueError('Rename specified as True but no data provided')
+        
+        df18 = count_unique_items_in_column(df_list[0], column_name).rename(index=rename_data)
+    else: 
+        df18 = count_unique_items_in_column(df_list[0], column_name)
+        
+    if fill_missing:
+        if len(missing_values) == 0:
+            raise ValueError('Fill missing specified as True but no data provided')
+        
+        if not rename:
+            df18 = count_unique_items_in_column(df_list[0], column_name)
+            
+        for i in missing_values:
+            if i not in df18.index.values:
+                df18.loc[i] = 0
+                
+    if not rename and not fill_missing:
+        df18 = count_unique_items_in_column(df_list[0], column_name) 
+        
+    df19 = count_unique_items_in_column(df_list[1], column_name)
+    df20 = count_unique_items_in_column(df_list[2], column_name)
+    df21 = count_unique_items_in_column(df_list[3], column_name)
+    
+    l = [df18, df19, df20, df21]
+
+    dfs_merged = _merge(l)
+    return dfs_merged

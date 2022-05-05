@@ -108,7 +108,7 @@ def replace_na_with_mean_in_age_column(df: pd.DataFrame, column_name: str) -> No
 
     df[column_name].fillna(mean, inplace=True)
     
-def add_trans_option(df: pd.DataFrame) -> list:
+def add_transgender_option(df: pd.DataFrame) -> list:
     e = []
     for gender, choice in zip(df['gender'].to_list(), df['transgender'].to_list()):
         
