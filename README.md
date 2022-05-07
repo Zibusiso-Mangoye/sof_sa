@@ -33,7 +33,7 @@ This is question is broken down to three parts namely:
 - Using Postgres with python
 
 ## Project Architecture 
-![img](img\Batch_Processing_pipeline.jpg)
+![img](img/Batch_Processing_pipeline.jpg)
 
 ## Getting Started
 
