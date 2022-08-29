@@ -1,0 +1,19 @@
+# Here you can define all your data sets by using simple YAML syntax.
+#
+# Documentation for this file format can be found in "The Data Catalog"
+# Link: https://kedro.readthedocs.io/en/stable/data/data_catalog.html
+public_2018_data:
+  type: pandas.CSVDataSet
+  filepath: data\01_raw\survey_results_public_2018.csv
+
+public_2019_data:
+  type: pandas.CSVDataSet
+  filepath: data\01_raw\survey_results_public_2019.csv
+
+public_2020_data:
+  type: pandas.CSVDataSet
+  filepath: data\01_raw\survey_results_public_2020.csv
+
+public_2021_data:
+  type: pandas.CSVDataSet
+  filepath: data\01_raw\survey_results_public_2021.csv
