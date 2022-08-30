@@ -1,0 +1,6 @@
+raw_stackoverflow2018:
+  type: pandas.SQLTableDataSet
+  credentials: dev_postgres
+  table_name: raw_stackoverflow2018
+  save_args:
+    if_exists: replace
