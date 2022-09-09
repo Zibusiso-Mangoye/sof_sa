@@ -4,7 +4,6 @@ generated using Kedro 0.18.2
 """
 
 from kedro.pipeline import Pipeline, node, pipeline
-from nodes import 
 
 def create_pipeline(**kwargs) -> Pipeline:
     return pipeline([
@@ -13,5 +12,6 @@ def create_pipeline(**kwargs) -> Pipeline:
             name = 'load_data_into_db',
             inputs=['public_2018_data', 'public_2019_data', 'public_2020_data', 'public_2021_data'],
             outputs=['2018_dataset', '2019_dataset', '2020_dataset', '2021_dataset']
-        ),
+    
+        )
     ])

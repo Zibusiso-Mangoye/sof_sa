@@ -1,34 +1,22 @@
-stackoverflow2018_dataset:
-  type: pandas.SQLTableDataSet
-  credentials: dev_postgres
-  table_name: raw_stackoverflow2018
-  save_args:
-    if_exists: replace
 
+
+# These are used when loading raw data from the database into the pipeline
 2018_dataset:
   type: pandas.SQLQueryDataSet
-  sql: >
-    /* Adding the column year */
-    ALTER TABLE public.raw_stackoverflow2018 
-    ADD year int;
+  credentials: dev_postgres
+  filepath: src\SQL\select_2018_data.sql
 
-    /* Updating the newly added column with one value*/
-    UPDATE public.raw_stackoverflow2018
-    SET year = 2018;
+2019_dataset:
+  type: pandas.SQLQueryDataSet
+  credentials: dev_postgres
+  filepath: src\SQL\select_2019_data.sql
 
-    /* Return new table*/
-    SELECT  
-      "Respondent" AS "respondent",
-      "Age" AS "age",
-        "Gender" AS "gender",
-        "DatabaseDesireNextYear" AS "database_desire_next_year",
-        "DatabaseWorkedWith" AS "database_worked_with",
-        "LanguageDesireNextYear" AS "language_desire_next_year",
-        "LanguageWorkedWith" AS "language_worked_with",
-        "PlatformDesireNextYear" AS "platform_desire_next_year",
-        "PlatformWorkedWith" AS "platform_worked_with",
-        "FrameworkWorkedWith" AS "web_framework_have_worked_with",
-        "FrameworkDesireNextYear" AS "web_framework_want_to_work_with",
-        "year"
-    FROM public.raw_stackoverflow2018;
-  credentials: db_credentials
+2020_dataset:
+  type: pandas.SQLQueryDataSet
+  credentials: dev_postgres
+  filepath: src\SQL\select_2020_data.sql
+
+2021_dataset:
+  type: pandas.SQLQueryDataSet
+  credentials: dev_postgres
+  filepath: src\SQL\select_2021_data.sql
