@@ -50,23 +50,3 @@ class Database:
                 logging.info(f"LOADED TABLE WITH NAME: {name_of_table}")
         except Exception as e:
             logging.error(e)
-
-    def get_data_from_db(self, path_to_sql_file: str, credentials: dict) -> pd.DataFrame:
-        """Executes an sql query 
-
-        Args:
-            path_to_sql_file (str): path to the sql file that contains the sql statement to execute.
-            credentials (dict): credentials to the database where the query will be executed 
-
-        Returns:
-            pd.DataFrame: a pandas dataframe representing the results of the query
-        """
-        try:
-            DATABASE_URL = f'postgresql+psycopg2://{credentials["user"]}:{credentials["password"]}@{credentials["host"]}:{credentials["port"]}/{credentials["database"]}'
-            engine = create_engine(DATABASE_URL, pool_pre_ping=True)
-
-            with open(path_to_sql_file, 'r') as file, engine.connect() as connection:
-                df = pd.read_sql_query(file.read(), connection)
-                return df
-        except Exception as e:
-            logging.error(e)
