@@ -8,13 +8,9 @@ SET year = 2018;
 
 /* Return new table*/
 SELECT  
-    "DatabaseDesireNextYear" AS "database_desire_next_year",
-    "DatabaseWorkedWith" AS "database_worked_with",
-    "LanguageDesireNextYear" AS "language_desire_next_year",
-    "LanguageWorkedWith" AS "language_worked_with",
-    "PlatformDesireNextYear" AS "platform_desire_next_year",
-    "PlatformWorkedWith" AS "platform_worked_with",
-    "FrameworkWorkedWith" AS "web_framework_have_worked_with",
-    "FrameworkDesireNextYear" AS "web_framework_want_to_work_with",
+    "DatabaseWorkedWith" AS "databases",
+    "LanguageWorkedWith" AS "languages",
+    "PlatformWorkedWith" AS "platforms",
+    "FrameworkWorkedWith" AS "web_frameworks",
     "year"
 FROM public.raw_stackoverflow2018;
