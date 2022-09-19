@@ -1,0 +1,60 @@
+years: 
+  - 2018
+  - 2019
+  - 2020
+  - 2021
+
+database_desire_next_year:
+  column_name: database_desire_next_year
+  rename_data:
+  edit_data:
+
+database_worked_with:
+
+language_desire_next_year:
+
+language_worked_with:
+
+platform_desire_next_year:
+  column_name: platform_desire_next_year
+  rename_data:
+    Google Cloud Platform/App Engine: Google Cloud Platform
+    Azure: Microsoft Azure
+
+platform_worked_with:
+  column_name: platform_worked_with
+  rename_data:
+    Google Cloud Platform/App Engine: Google Cloud Platform
+    Azure: Microsoft Azure
+ 
+web_framework_have_worked_with:
+  column_name: web_framework_have_worked_with
+  rename_data:
+    React: React.js
+    Angular: Angular.js
+    Angular/Angular.js: Angular.js
+  edit_data:
+  - ASP.NET
+  - jQuery
+  - Vue.js
+  - Flask
+  - Laravel
+  - Express
+  - Ruby on Rails
+  - Drupal
+
+web_framework_want_to_work_with:
+  column_name: web_framework_have_worked_with
+  rename_data:
+    React: React.js
+    Angular: Angular.js
+    Angular/Angular.js: Angular.js
+  edit_data:
+  - ASP.NET
+  - jQuery
+  - Vue.js
+  - Flask
+  - Laravel
+  - Express
+  - Ruby on Rails
+  - Drupal

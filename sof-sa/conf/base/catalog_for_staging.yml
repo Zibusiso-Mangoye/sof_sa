@@ -1,6 +1,33 @@
+# These are used to load data into the db
+raw_stackoverflow2018:
+  type: pandas.SQLTableDataSet
+  credentials: dev_postgres
+  table_name: raw_stackoverflow2018
+  save_args:
+    if_exists: replace
 
+raw_stackoverflow2019:
+  type: pandas.SQLTableDataSet
+  table_name: raw_stackoverflow2019
+  credentials: dev_postgres
+  save_args:
+    if_exists: replace
 
-# These are used when loading raw data from the database into the pipeline
+raw_stackoverflow2020:
+  type: pandas.SQLTableDataSet
+  table_name: raw_stackoverflow2020
+  credentials: dev_postgres
+  save_args:
+    if_exists: replace
+
+raw_stackoverflow2021:
+  type: pandas.SQLTableDataSet
+  table_name: raw_stackoverflow2021
+  credentials: dev_postgres
+  save_args:
+    if_exists: replace
+    
+# These are used when loading data from the database into the pipeline
 2018_dataset:
   type: pandas.SQLQueryDataSet
   credentials: dev_postgres

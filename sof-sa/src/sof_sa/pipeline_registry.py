@@ -3,7 +3,7 @@ from typing import Dict
 
 from kedro.pipeline import Pipeline, pipeline
 
-from pipelines import data_engineering as de
+from .pipelines import data_engineering as de
 
 def register_pipelines() -> Dict[str, Pipeline]:
     """Register the project's pipelines.
