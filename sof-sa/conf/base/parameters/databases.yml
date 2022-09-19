@@ -1,0 +1,11 @@
+# This is a boilerplate parameters config generated for pipeline 'databases'
+# using Kedro 0.18.2.
+#
+# Documentation for this file format can be found in "Parameters"
+# Link: https://kedro.readthedocs.io/en/0.18.2/kedro_project_setup/configuration.html#parameters
+databases:
+  column_name: databases
+  rename_data:
+    SQL Server: Microsoft SQL Server
+    IBM Db2: IBM DB2
+    Amazon DynamoDB: DynamoDB

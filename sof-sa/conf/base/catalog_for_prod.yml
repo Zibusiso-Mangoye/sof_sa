@@ -1,10 +1,3 @@
-future_databases:
-  type: pandas.SQLTableDataSet
-  credentials: prod_postgres
-  table_name: future_databases
-  save_args:
-    if_exists: replace
-
 databases:
   type: pandas.SQLTableDataSet
   table_name: databases
@@ -12,21 +5,7 @@ databases:
   save_args:
     if_exists: replace
 
-future_languages:
-  type: pandas.SQLTableDataSet
-  table_name: databases
-  credentials: prod_postgres
-  save_args:
-    if_exists: replace
-
 languages:
-  type: pandas.SQLTableDataSet
-  table_name: databases
-  credentials: prod_postgres
-  save_args:
-    if_exists: replace
-
-future_platforms:
   type: pandas.SQLTableDataSet
   table_name: databases
   credentials: prod_postgres
@@ -41,13 +20,6 @@ platforms:
     if_exists: replace
 
 web_frameworks:
-  type: pandas.SQLTableDataSet
-  table_name: databases
-  credentials: prod_postgres
-  save_args:
-    if_exists: replace
-
-future_web_framework:
   type: pandas.SQLTableDataSet
   table_name: databases
   credentials: prod_postgres

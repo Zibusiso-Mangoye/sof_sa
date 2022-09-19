@@ -1,0 +1,20 @@
+# This is a boilerplate parameters config generated for pipeline 'web_frameworks'
+# using Kedro 0.18.2.
+#
+# Documentation for this file format can be found in "Parameters"
+# Link: https://kedro.readthedocs.io/en/0.18.2/kedro_project_setup/configuration.html#parameters
+web_frameworks:
+  column_name: web_frameworks
+  rename:
+    React: React.js
+    Angular: Angular.js
+    Angular/Angular.js: Angular.js
+  edit:
+  - ASP.NET
+  - jQuery
+  - Vue.js
+  - Flask
+  - Laravel
+  - Express
+  - Ruby on Rails
+  - Drupal

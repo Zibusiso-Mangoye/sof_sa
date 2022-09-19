@@ -1,24 +1,16 @@
-/* Adding the column year */
-ALTER TABLE public.raw_stackoverflow2021
-ADD year int;
+/* Check if the year column exists*/ 
+IF NOT (SELECT column_name 
+        FROM information_schema.columns 
+        WHERE table_name='public.raw_stackoverflow2021' and column_name='year')
+THEN
+    ALTER TABLE public.raw_stackoverflow2019 ADD COLUMN IF NOT EXISTS year INTEGER;
+    UPDATE public.raw_stackoverflow2019 SET year = 2021;
+END IF;
 
-/* Updating the newly added column with one value*/
-UPDATE public.raw_stackoverflow2021
-SET year = 2021;
-
-/* Return new table*/
 SELECT
-	"ResponseId" AS "respondent",
-	"Age" AS "age",
-    "Gender" AS "gender",
-    "Trans" AS "transgender",
-    "DatabaseWantToWorkWith" AS "database_desire_next_year",
-    "DatabaseHaveWorkedWith" AS "database_worked_with",
-    "LanguageWantToWorkWith" AS "language_desire_next_year",
-    "LanguageHaveWorkedWith" AS "language_worked_with",
-    "PlatformHaveWorkedWith" AS "platform_desire_next_year",
-    "PlatformWantToWorkWith" AS "platform_worked_with",
-    "WebframeHaveWorkedWith" AS "web_framework_have_worked_with",
-    "WebframeWantToWorkWith" AS "web_framework_want_to_work_with", 
-	"year"
+    "DatabaseHaveWorkedWith" AS "databases",
+    "LanguageHaveWorkedWith" AS "languages",
+    "PlatformWantToWorkWith" AS "platforms",
+    "WebframeHaveWorkedWith" AS "web_frameworks",
+    "year"
 FROM public.raw_stackoverflow2021;

@@ -1,10 +1,12 @@
-ALTER TABLE public.raw_stackoverflow2019 ADD COLUMN IF NOT EXISTS year INTEGER;
+/* Check if the year column exists*/ 
+IF NOT (SELECT column_name 
+        FROM information_schema.columns 
+        WHERE table_name='public.raw_stackoverflow2019' and column_name='year')
+THEN
+    ALTER TABLE public.raw_stackoverflow2019 ADD COLUMN IF NOT EXISTS year INTEGER;
+    UPDATE public.raw_stackoverflow2019 SET year = 2019;
+END IF;
 
-/* Updating the newly added column with one value*/
-UPDATE public.raw_stackoverflow2019
-SET year = 2019;
-
-/* Return new table*/
 SELECT  
     "WebFrameWorkedWith" AS "web_frameworks",
     "DatabaseWorkedWith" AS "databases",

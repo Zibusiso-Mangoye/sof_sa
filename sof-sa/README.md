@@ -4,8 +4,6 @@
 
 ## Rules and guidelines
 
-In order to get the best out of the template:
-
 * Don't remove any lines from the `.gitignore` file we provide
 * Make sure your results can be reproduced by following a [data engineering convention](https://kedro.readthedocs.io/en/stable/faq/faq.html#what-is-data-engineering-convention)
 * Don't commit data to your repository
