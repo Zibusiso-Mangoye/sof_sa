@@ -1,21 +1,11 @@
 # Pipeline languages
 
-> *Note:* This is a `README.md` boilerplate generated using `Kedro 0.18.2`.
-
 ## Overview
 
 <!---
 Please describe your modular pipeline here.
 -->
+This pipeline transforms a column from a table in a staging database and creates a table from that column.
 
-## Pipeline inputs
-
-<!---
-The list of pipeline inputs.
--->
-
-## Pipeline outputs
-
-<!---
-The list of pipeline outputs.
--->
+## Flow
+![img](imgs/kedro_pipeline_languages.png)
