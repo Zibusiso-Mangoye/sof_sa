@@ -5,11 +5,11 @@
 # Link: https://kedro.readthedocs.io/en/0.18.2/kedro_project_setup/configuration.html#parameters
 web_frameworks:
   column_name: web_frameworks
-  rename:
+  rename_data:
     React: React.js
     Angular: Angular.js
     Angular/Angular.js: Angular.js
-  edit:
+  edit_data:
   - ASP.NET
   - jQuery
   - Vue.js

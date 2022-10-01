@@ -4,24 +4,28 @@ databases:
   credentials: prod_postgres
   save_args:
     if_exists: replace
+    index: False
 
 languages:
   type: pandas.SQLTableDataSet
-  table_name: databases
+  table_name: languages
   credentials: prod_postgres
   save_args:
     if_exists: replace
+    index: False
 
 platforms:
   type: pandas.SQLTableDataSet
-  table_name: databases
+  table_name: platforms
   credentials: prod_postgres
   save_args:
     if_exists: replace
+    index: False
 
 web_frameworks:
   type: pandas.SQLTableDataSet
-  table_name: databases
+  table_name: web_frameworks
   credentials: prod_postgres
   save_args:
     if_exists: replace
+    index: False

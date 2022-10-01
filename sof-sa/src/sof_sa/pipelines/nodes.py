@@ -63,11 +63,11 @@ def merge_dfs_on_index(dataset_18: pd.DataFrame, dataset_19: pd.DataFrame,
     Returns:
         pd.DataFrame: a dataframe with column names 
     """
-    
     df18_19 = pd.merge(dataset_18, dataset_19, left_index=True, right_index=True)
     df20_21 = pd.merge(dataset_20, dataset_21, left_index=True, right_index=True)
     dfs_merged = pd.merge(df18_19, df20_21, left_index=True, right_index=True)
     dfs_merged.columns = column_names
+    dfs_merged.reset_index(inplace=True)
     
     return dfs_merged
 
@@ -85,13 +85,12 @@ def rename_values_in_col_on_index(df: pd.DataFrame, column_params: dict = None) 
         pd.DataFrame: dataframe with renamed values
     """
     
-    rename_data = column_params['rename']
+    rename_data = column_params['rename_data']
     
-    if 'data' not in rename_data:
+    if rename_data is None:
         raise ValueError("Rename should be a dict with key\n \t>  'rename' - the actual data to be used in renaming")
-             
-    df.rename(index=rename_data, inplace=True)
     
+    df.rename(index=rename_data, inplace=True)     
     return df
     
 
@@ -108,9 +107,9 @@ def add_missing_values_in_index(df: pd.DataFrame, column_params: dict = None) ->
     Returns:
         pd.DataFrame: dataframe with addition values set to 0
     """
-    edit_values = column_params['edit']
+    edit_values = column_params['edit_data']
     
-    if edit_values is not None:
+    if edit_values is None:
         raise ValueError("Data to use in editing dataframe is empty.\n Must be a list")
     
     for i in edit_values:

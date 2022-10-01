@@ -9,3 +9,7 @@ databases:
     SQL Server: Microsoft SQL Server
     IBM Db2: IBM DB2
     Amazon DynamoDB: DynamoDB
+  edit_data:
+    - Cassandra
+    - Couchbase
+    - Firebase

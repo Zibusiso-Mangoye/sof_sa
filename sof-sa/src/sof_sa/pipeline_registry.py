@@ -5,11 +5,6 @@ from kedro.pipeline import Pipeline, node, pipeline
 
 from .pipelines import languages, databases, cloud_platforms, web_frameworks
 
-def load_into_db(df: pd.DataFrame) -> pd.DataFrame:
-    # Kedro takes care of loading and retrieving data from the database using its catalog system.
-    # The inout would be a csv catalog entry and output a postgres catalog entry.
-    return df
-
 def register_pipelines() -> dict[str, Pipeline]:
     """Register the project's pipelines.
 
@@ -29,27 +24,29 @@ def register_pipelines() -> dict[str, Pipeline]:
         "__default__": pipeline([
             node(
                 name='load_2018_data',
-                func=load_into_db,
-                inputs=['public_2018_data'],
-                outputs=['raw_stackoverflow2018']
+                # Kedro takes care of loading and retrieving data from the database using its catalog system.
+                # The input would be a csv catalog entry and output a postgres catalog entry.
+                func=lambda x: x, 
+                inputs='public_2018_data',
+                outputs='raw_stackoverflow2018'
             ),
             node(
                 name='load_2019_data',
-                func=load_into_db,
-                inputs=['public_2019_data'],
-                outputs=['raw_stackoverflow2019']
+                func=lambda x: x,
+                inputs='public_2019_data',
+                outputs='raw_stackoverflow2019'
             ),
             node(
                 name='load_2020_data',
-                func=load_into_db,
-                inputs=['public_2020_data'],
-                outputs=['raw_stackoverflow2020']
+                func=lambda x: x,
+                inputs='public_2020_data',
+                outputs='raw_stackoverflow2020'
             ),
             node(
                 name='load_2021_data',
-                func=load_into_db,
-                inputs=['public_2021_data'],
-                outputs=['raw_stackoverflow2021'],
+                func=lambda x: x,
+                inputs='public_2021_data',
+                outputs='raw_stackoverflow2021',
                 
             )
         ])
