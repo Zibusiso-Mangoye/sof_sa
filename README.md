@@ -81,7 +81,10 @@ For more information on configuration see this [README](sof-sa\conf\README.md)
         
 - Check [exploration.ipynb](sof-sa\notebooks\exploration.ipynb) in the notebooks folder for a more detailed explanation of the etl process. 
 
-More detailed information about the project and its pipelines can be found <a href="sof-sa\docs\build\html\index.html" target="_blank">here</a>
+For more detailed information about the project you will have to build the docs, as follows
+
+        >> cd sof-sa && kedro build-docs
+then open `sof-sa\docs\build\html\index.html` in your browser
 
 ### Built With
 
