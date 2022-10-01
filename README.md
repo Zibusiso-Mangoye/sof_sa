@@ -69,12 +69,19 @@ For more information on configuration see this [README](sof-sa\conf\README.md)
 
 ### Running the project
 
-        kedro run
+        >> kedro run -p load_data
  
-- This runs the whole ETL process. The outcome is a production database instance on Postgres.
+- This runs a pipeline that loads data into the staging database. 
+
+        >> kedro run -p languages_pipeline 
+        >> kedro run -p databases_pipeline
+        >> kedro run -p cloud_platforms_pipeline
+        >> kedro run -p web_frameworks_pipeline
+- These commands run all the available pipelines and are to be executed separately.
+        
 - Check [exploration.ipynb](sof-sa\notebooks\exploration.ipynb) in the notebooks folder for a more detailed explanation of the etl process. 
 
-More detailed information about the project and its pipelines can be found [here](sof-sa\README.md)
+More detailed information about the project and its pipelines can be found <a href="sof-sa\docs\build\html\index.html" target="_blank">here</a>
 
 ### Built With
 
@@ -90,6 +97,7 @@ The main findings of the report can be found at the post available here(report u
 ## Next steps 
 
 - Implement node testing for each platform using pytest
+- Expand depth by adding more years
 - Create and publish report
 
 ## Author 
