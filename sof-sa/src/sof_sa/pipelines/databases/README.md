@@ -3,19 +3,13 @@
 > *Note:* This is a `README.md` boilerplate generated using `Kedro 0.18.2`.
 
 ## Overview
+This pipeline:
+- Uses a SELECT query to filter columns from a staging database based on year
+    - A [MemoryDataSet](https://kedro.readthedocs.io/en/stable/kedro.io.MemoryDataSet.html) are returned for each year
+- For each year
+    - The databases column is filtered
+    - Transformed 
+- The transformed datasets are merged into a table `databases`
 
-<!---
-Please describe your modular pipeline here.
--->
-
-## Pipeline inputs
-
-<!---
-The list of pipeline inputs.
--->
-
-## Pipeline outputs
-
-<!---
-The list of pipeline outputs.
--->
+## Flow
+![img](kedro-pipeline-databases.png)*Flow of the full pipeline visualized*

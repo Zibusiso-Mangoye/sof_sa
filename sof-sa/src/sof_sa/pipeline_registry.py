@@ -21,7 +21,7 @@ def register_pipelines() -> dict[str, Pipeline]:
         "databases_pipeline": databases_pipeline,
         "cloud_platforms_pipeline": cloud_platforms_pipeline,
         "web_frameworks_pipeline": web_frameworks_pipeline,
-        "__default__": pipeline([
+        "load_data": pipeline([
             node(
                 name='load_2018_data',
                 # Kedro takes care of loading and retrieving data from the database using its catalog system.

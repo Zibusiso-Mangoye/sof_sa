@@ -1,21 +1,14 @@
 # Pipeline web_frameworks
 
-> *Note:* This is a `README.md` boilerplate generated using `Kedro 0.18.2`.
-
 ## Overview
 
-<!---
-Please describe your modular pipeline here.
--->
+This pipeline:
+- Uses a SELECT query to filter columns from a staging database based on year
+    - A [MemoryDataSet](https://kedro.readthedocs.io/en/stable/kedro.io.MemoryDataSet.html) are returned for each year
+- For each year
+    - The web_frameworks column is filtered
+    - Transformed 
+- The transformed datasets are merged into a table `web_frameworks`
 
-## Pipeline inputs
-
-<!---
-The list of pipeline inputs.
--->
-
-## Pipeline outputs
-
-<!---
-The list of pipeline outputs.
--->
+## Flow
+![img](kedro-pipeline-frameworks.png)*Flow of the full pipeline visualized*

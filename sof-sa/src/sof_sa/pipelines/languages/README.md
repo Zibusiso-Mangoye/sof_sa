@@ -1,11 +1,14 @@
-# Pipeline languages
+# Languages pipeline
 
 ## Overview
 
-<!---
-Please describe your modular pipeline here.
--->
-This pipeline transforms a column from a table in a staging database and creates a table from that column.
+This pipeline:
+- Uses a SELECT query to filter columns from a staging database based on year
+    - A [MemoryDataSet](https://kedro.readthedocs.io/en/stable/kedro.io.MemoryDataSet.html) are returned for each year
+- For each year
+    - The languages column is filtered
+    - Transformed 
+- The transformed datasets are merged into a table `Languages`
 
 ## Flow
-![img](kedro_pipeline_languages.png)
+![img](kedro_pipeline_languages.png)*Flow of the full pipeline visualized*
