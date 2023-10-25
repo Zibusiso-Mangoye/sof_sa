@@ -1,6 +1,7 @@
 # sof_sa
 ## Analyzing past and current trends in software engineering and development using Stack Overflow Developer Survey data
 
+
 ### Table of Contents
 - Introduction
 - What I learned
@@ -32,7 +33,7 @@ To get this understanding the following questions are asked:
 - Using Postgres with python
 
 ## Project Architecture 
-![img](imgs/Batch_Processing_pipeline.jpg)
+![img](imgs/batch_processing_pipeline.jpg)
 
 ## Getting Started
 
