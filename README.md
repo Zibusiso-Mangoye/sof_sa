@@ -96,13 +96,7 @@ then open `sof-sa\docs\build\html\index.html` in your browser
 
 ## Results
 
-The main findings of the report can be found at the post available here(report under construction).
-
-## Next steps 
-
-- Implement node testing for each platform using pytest
-- Expand depth by adding more years
-- Create and publish report
+The main findings of the report can be found [here](Report.pbix).
 
 ## Author 
 
